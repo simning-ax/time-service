@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Security;
+namespace App\Application\Services;
 
 use App\Domain\Enums\Permission;
 use App\Domain\ValueObjects\UserId;
@@ -26,7 +26,7 @@ class CurrentUser {
             static fn (string $permission) : ?Permission => Permission::tryFrom($permission),
             $permissions,
         )
-                |> (fn ($x) => array_filter($x, static fn (?Permission $permission) : bool => $permission !== null, ))
+                |> (fn ($x) => array_filter($x, static fn (?Permission $permission) : bool => $permission !== null))
                 |> array_values(...);
     }
 

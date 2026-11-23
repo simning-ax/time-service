@@ -6,7 +6,8 @@ namespace Tests\Unit\Application\Handlers\TimeEntry;
 
 use App\Application\Commands\TimeEntry\TimeEntryCommand;
 use App\Application\Handlers\TimeEntry\UpdateTimeEntryHandler;
-use App\Application\Security\CurrentUser;
+use App\Application\Services\CurrentUser;
+use App\Application\Services\TimeEntryClassificationService;
 use App\Domain\DataTransportObjects\TimeEntryDTO;
 use App\Domain\Entities\TimeEntry;
 use App\Domain\Exception\ForbiddenException;
@@ -47,7 +48,10 @@ final class UpdateTimeEntryHandlerTest extends TestCase {
                 ),
             );
 
-        $handler = new UpdateTimeEntryHandler($repository, );
+
+        $classificationService = $this->createMock(TimeEntryClassificationService::class);
+
+        $handler = new UpdateTimeEntryHandler($repository, $classificationService);
 
         $command = TimeEntryCommand::fromRequest([
             'id' => '550e8400-e29b-41d4-a716-446655440001',
@@ -80,7 +84,9 @@ final class UpdateTimeEntryHandlerTest extends TestCase {
             ->expects($this->never())
             ->method('get');
 
-        $handler = new UpdateTimeEntryHandler($repository, );
+        $classificationService = $this->createMock(TimeEntryClassificationService::class);
+
+        $handler = new UpdateTimeEntryHandler($repository, $classificationService);
 
         $command = TimeEntryCommand::fromRequest([
             'id' => '550e8400-e29b-41d4-a716-446655440001',
@@ -108,7 +114,9 @@ final class UpdateTimeEntryHandlerTest extends TestCase {
                 new NotFoundException('Tidspost saknas', ),
             );
 
-        $handler = new UpdateTimeEntryHandler($repository, );
+        $classificationService = $this->createMock(TimeEntryClassificationService::class);
+
+        $handler = new UpdateTimeEntryHandler($repository, $classificationService);
 
         $command = TimeEntryCommand::fromRequest([
             'id' => '550e8400-e29b-41d4-a716-446655440001',
@@ -140,7 +148,10 @@ final class UpdateTimeEntryHandlerTest extends TestCase {
             ->expects($this->never())
             ->method('update');
 
-        $handler = new UpdateTimeEntryHandler($repository, );
+
+        $classificationService = $this->createMock(TimeEntryClassificationService::class);
+
+        $handler = new UpdateTimeEntryHandler($repository, $classificationService);
 
         $command = TimeEntryCommand::fromRequest([
             'id' => '550e8400-e29b-41d4-a716-446655440001',
@@ -183,7 +194,10 @@ final class UpdateTimeEntryHandlerTest extends TestCase {
                 $this->isInstanceOf(TimeEntry::class),
             );
 
-        $handler = new UpdateTimeEntryHandler($repository, );
+
+        $classificationService = $this->createMock(TimeEntryClassificationService::class);
+
+        $handler = new UpdateTimeEntryHandler($repository, $classificationService);
 
         $command = TimeEntryCommand::fromRequest([
             'id' => '550e8400-e29b-41d4-a716-446655440001',
@@ -221,7 +235,10 @@ final class UpdateTimeEntryHandlerTest extends TestCase {
             ->expects($this->never())
             ->method('update');
 
-        $handler = new UpdateTimeEntryHandler($repository, );
+
+        $classificationService = $this->createMock(TimeEntryClassificationService::class);
+
+        $handler = new UpdateTimeEntryHandler($repository, $classificationService);
 
         $command = TimeEntryCommand::fromRequest([
             'id' => '550e8400-e29b-41d4-a716-446655440001',
@@ -256,6 +273,7 @@ final class UpdateTimeEntryHandlerTest extends TestCase {
             'Ledare',
             new GroupId('660e8400-e29b-41d4-a716-446655440000', ),
             'Testkommentar',
+            0,
             null,
             null,
             null,
@@ -274,12 +292,13 @@ final class UpdateTimeEntryHandlerTest extends TestCase {
             'Ledare',
             new GroupId('660e8400-e29b-41d4-a716-446655440000', ),
             'Testkommentar',
+            0,
             new UserId('550e8400-e29b-41d4-a716-446655440555', ),
             new DateTimeValue('2026-11-05T13:00:00+00:00', ),
             null,
             null,
             new DateTimeValue('2026-11-05T12:00:00+00:00', ),
-            new DateTimeValue('2026-11-05T13:00:00+00:00',),
+            new DateTimeValue('2026-11-05T13:00:00+00:00', ),
         );
     }
 }

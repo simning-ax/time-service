@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 use App\Application\ErrorHandler\ErrorHandler;
 use App\Application\Middleware\ErrorMiddleware;
+use App\Application\Services\GroupService;
 use App\Infrastructure\Auth\AuthServiceClient;
+use App\Infrastructure\Group\GroupServiceClient;
 use DI\ContainerBuilder;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
@@ -25,6 +27,17 @@ return function (ContainerBuilder $builder) {
             return new AuthServiceClient(
                 new Client([
                     'base_uri' => rtrim($_ENV['AUTH_SERVICE_URL'], '/'),
+                    'timeout' => 3.0,
+                ]),
+            );
+        },
+        GroupService::class => function () {
+            if ($_ENV['APP_ENV'] === 'test') {
+                return new \Tests\Fakes\FakeGroupService();
+            }
+            return new GroupServiceClient(
+                new Client([
+                    'base_uri' => rtrim($_ENV['GROUP_SERVICE_URL'], '/'),
                     'timeout' => 3.0,
                 ]),
             );

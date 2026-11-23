@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Application\Security;
 
-use App\Application\Security\CurrentUser;
+use App\Application\Services\CurrentUser;
 use App\Domain\Enums\Permission;
 use App\Domain\ValueObjects\UserId;
 use PHPUnit\Framework\TestCase;

@@ -6,6 +6,7 @@ namespace Tests\Unit\Application\Handlers\TimeEntry;
 
 use App\Application\Commands\TimeEntry\TimeEntryCommand;
 use App\Application\Handlers\TimeEntry\AddTimeEntryHandler;
+use App\Application\Services\TimeEntryClassificationService;
 use App\Domain\DataTransportObjects\TimeEntryDTO;
 use App\Domain\Exception\FutureDateNotAllowedException;
 use App\Domain\Repositories\TimeEntryRepository;
@@ -19,7 +20,9 @@ final class AddTimeEntryHandlerTest extends TestCase {
             ->expects($this->once())
             ->method('add');
 
-        $handler = new AddTimeEntryHandler($repository);
+        $classificationService = $this->createMock(TimeEntryClassificationService::class);
+
+        $handler = new AddTimeEntryHandler($repository, $classificationService);
 
         $command = TimeEntryCommand::fromRequest([
             'userId' => '550e8400-e29b-41d4-a716-446655440000',
@@ -44,7 +47,9 @@ final class AddTimeEntryHandlerTest extends TestCase {
             ->expects($this->never())
             ->method('add');
 
-        $handler = new AddTimeEntryHandler($repository);
+        $classificationService = $this->createMock(TimeEntryClassificationService::class);
+
+        $handler = new AddTimeEntryHandler($repository, $classificationService);
 
         $command = TimeEntryCommand::fromRequest([
             'userId' => '550e8400-e29b-41d4-a716-446655440000',

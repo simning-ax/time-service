@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Infrastructure\Database;
 
+use App\Application\Commands\TimeEntry\SearchTimeEntriesCommand;
 use App\Domain\Entities\TimeEntry;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\ValueObjects\DateTimeValue;
@@ -224,6 +225,7 @@ final class DbalTimeEntryRepositoryTest extends DatabaseBaseTestCase {
             'Ledare',
             null,
             'Testkommentar',
+            0,
             null,
             null,
             null,
@@ -293,5 +295,334 @@ final class DbalTimeEntryRepositoryTest extends DatabaseBaseTestCase {
         );
 
         self::assertSame([], $entries);
+    }
+
+    public function testSearchReturnsMatchingTimeEntries() : void {
+        $this->seed('time_entries', [
+            [
+                'id' => '550e8400-e29b-41d4-a716-446655440001',
+                'user_id' => '550e8400-e29b-41d4-a716-446655440000',
+                'date' => '2026-11-05',
+                'duration' => '03:05:00',
+                'activity_role' => 'Ledare',
+                'group_id' => null,
+                'comment' => null,
+                'approved_by' => null,
+                'approved_at' => null,
+                'exported_by' => null,
+                'exported_at' => null,
+                'created_at' => '2026-11-05 12:00:00',
+                'updated_at' => null,
+            ],
+        ]);
+
+        $command = SearchTimeEntriesCommand::fromRequest([]);
+
+        $result = $this->repository->search($command);
+
+        self::assertCount(1, $result);
+    }
+
+    public function testSearchFiltersByUser() : void {
+        $this->seed('time_entries', [
+            [
+                'id' => '550e8400-e29b-41d4-a716-446655440001',
+                'user_id' => '550e8400-e29b-41d4-a716-446655440000',
+                'date' => '2026-11-05',
+                'duration' => '03:05:00',
+                'activity_role' => 'Ledare',
+                'group_id' => null,
+                'comment' => null,
+                'approved_by' => null,
+                'approved_at' => null,
+                'exported_by' => null,
+                'exported_at' => null,
+                'created_at' => '2026-11-05 12:00:00',
+                'updated_at' => null,
+            ],
+            [
+                'id' => '550e8400-e29b-41d4-a716-446655440002',
+                'user_id' => '550e8400-e29b-41d4-a716-446655440111',
+                'date' => '2026-11-05',
+                'duration' => '03:05:00',
+                'activity_role' => 'Ledare',
+                'group_id' => null,
+                'comment' => null,
+                'approved_by' => null,
+                'approved_at' => null,
+                'exported_by' => null,
+                'exported_at' => null,
+                'created_at' => '2026-11-05 12:00:00',
+                'updated_at' => null,
+            ],
+        ]);
+
+        $command = SearchTimeEntriesCommand::fromRequest([
+            'users' => [
+                '550e8400-e29b-41d4-a716-446655440000',
+            ],
+        ]);
+
+        $result = $this->repository->search($command);
+
+        self::assertCount(1, $result);
+
+        self::assertSame('550e8400-e29b-41d4-a716-446655440000', $result[0]->getUserId()->toString());
+    }
+
+    public function testSearchFiltersByStatusOpen() : void {
+        $this->seed('time_entries', [
+            [
+                'id' => '550e8400-e29b-41d4-a716-446655440001',
+                'user_id' => '550e8400-e29b-41d4-a716-446655440000',
+                'date' => '2026-11-05',
+                'duration' => '03:05:00',
+                'activity_role' => 'Ledare',
+                'group_id' => null,
+                'comment' => null,
+                'created_at' => '2026-11-05 12:00:00',
+                'updated_at' => null,
+                'approved_by' => null,
+                'approved_at' => null,
+                'exported_by' => null,
+                'exported_at' => null,
+            ],
+            [
+                'id' => '550e8400-e29b-41d4-a716-446655440002',
+                'user_id' => '550e8400-e29b-41d4-a716-446655440000',
+                'date' => '2026-11-05',
+                'duration' => '03:05:00',
+                'activity_role' => 'Ledare',
+                'group_id' => null,
+                'comment' => null,
+                'created_at' => '2026-11-05 12:00:00',
+                'updated_at' => null,
+                'approved_by' => '550e8400-e29b-41d4-a716-446655440999',
+                'approved_at' => '2026-11-05 13:00:00',
+                'exported_by' => null,
+                'exported_at' => null,
+            ],
+        ]);
+
+        $command = SearchTimeEntriesCommand::fromRequest([
+            'status' => 'open',
+        ]);
+
+        $result = $this->repository->search($command);
+
+        self::assertCount(1, $result);
+    }
+
+    public function testSearchAppliesPaging() : void {
+        $this->seed('time_entries', [
+            [
+                'id' => '550e8400-e29b-41d4-a716-446655440001',
+                'user_id' => '550e8400-e29b-41d4-a716-446655440000',
+                'date' => '2026-11-05',
+                'duration' => '03:05:00',
+                'activity_role' => 'Ledare',
+                'group_id' => null,
+                'comment' => null,
+                'approved_by' => null,
+                'approved_at' => null,
+                'exported_by' => null,
+                'exported_at' => null,
+                'created_at' => '2026-11-05 12:00:00',
+                'updated_at' => null,
+            ],
+            ['id' => '550e8400-e29b-41d4-a716-446655440002',
+                'user_id' => '550e8400-e29b-41d4-a716-446655440000',
+                'date' => '2026-11-05',
+                'duration' => '03:05:00',
+                'activity_role' => 'Ledare',
+                'group_id' => null,
+                'comment' => null,
+                'approved_by' => null,
+                'approved_at' => null,
+                'exported_by' => null,
+                'exported_at' => null,
+                'created_at' => '2026-11-05 12:00:00',
+                'updated_at' => null,
+            ],
+            ['id' => '550e8400-e29b-41d4-a716-446655440003',
+                'user_id' => '550e8400-e29b-41d4-a716-446655440000',
+                'date' => '2026-11-05',
+                'duration' => '03:05:00',
+                'activity_role' => 'Ledare',
+                'group_id' => null,
+                'comment' => null,
+                'approved_by' => null,
+                'approved_at' => null,
+                'exported_by' => null,
+                'exported_at' => null,
+                'created_at' => '2026-11-05 12:00:00',
+                'updated_at' => null,
+            ],
+        ]);
+
+        $command = SearchTimeEntriesCommand::fromRequest(['firstRecord' => 1, 'maxRecords' => 1, ]);
+
+        $result = $this->repository->search($command);
+
+        self::assertCount(1, $result);
+    }
+
+    public function testGetTotalCountReturnsTotalNumberOfMatchingRecords() : void {
+        $this->seed('time_entries', [
+            [
+                'id' => '550e8400-e29b-41d4-a716-446655440001',
+                'user_id' => '550e8400-e29b-41d4-a716-446655440000',
+                'date' => '2026-11-05',
+                'duration' => '03:05:00',
+                'activity_role' => 'Ledare',
+                'group_id' => null,
+                'comment' => null,
+                'approved_by' => null,
+                'approved_at' => null,
+                'exported_by' => null,
+                'exported_at' => null,
+                'created_at' => '2026-11-05 12:00:00',
+                'updated_at' => null,
+            ],
+            ['id' => '550e8400-e29b-41d4-a716-446655440002',
+                'user_id' => '550e8400-e29b-41d4-a716-446655440000',
+                'date' => '2026-11-05',
+                'duration' => '03:05:00',
+                'activity_role' => 'Ledare',
+                'group_id' => null,
+                'comment' => null,
+                'approved_by' => null,
+                'approved_at' => null,
+                'exported_by' => null,
+                'exported_at' => null,
+                'created_at' => '2026-11-05 12:00:00',
+                'updated_at' => null,
+            ],
+            ['id' => '550e8400-e29b-41d4-a716-446655440003',
+                'user_id' => '550e8400-e29b-41d4-a716-446655440000',
+                'date' => '2026-11-05',
+                'duration' => '03:05:00',
+                'activity_role' => 'Ledare',
+                'group_id' => null,
+                'comment' => null,
+                'approved_by' => null,
+                'approved_at' => null,
+                'exported_by' => null,
+                'exported_at' => null,
+                'created_at' => '2026-11-05 12:00:00',
+                'updated_at' => null,
+            ],
+        ]);
+
+        $command = SearchTimeEntriesCommand::fromRequest([]);
+
+        $count = $this->repository->getTotalCount($command);
+
+        self::assertSame(3, $count);
+    }
+
+    public function testGetTotalCountUsesSameFiltersAsSearch() : void {
+        $this->seed('time_entries', [
+            [
+                'id' => '550e8400-e29b-41d4-a716-446655440001',
+                'user_id' => '550e8400-e29b-41d4-a716-446655440000',
+                'date' => '2026-11-05',
+                'duration' => '03:05:00',
+                'activity_role' => 'Ledare',
+                'group_id' => null,
+                'comment' => null,
+                'approved_by' => null,
+                'approved_at' => null,
+                'exported_by' => null,
+                'exported_at' => null,
+                'created_at' => '2026-11-05 12:00:00',
+                'updated_at' => null,
+            ],
+            ['id' => '550e8400-e29b-41d4-a716-446655440002',
+                'user_id' => '550e8400-e29b-41d4-a716-446655440001',
+                'date' => '2026-11-05',
+                'duration' => '03:05:00',
+                'activity_role' => 'Ledare',
+                'group_id' => null,
+                'comment' => null,
+                'approved_by' => null,
+                'approved_at' => null,
+                'exported_by' => null,
+                'exported_at' => null,
+                'created_at' => '2026-11-05 12:00:00',
+                'updated_at' => null,
+            ],
+            ['id' => '550e8400-e29b-41d4-a716-446655440003',
+                'user_id' => '550e8400-e29b-41d4-a716-446655440001',
+                'date' => '2026-11-05',
+                'duration' => '03:05:00',
+                'activity_role' => 'Ledare',
+                'group_id' => null,
+                'comment' => null,
+                'approved_by' => null,
+                'approved_at' => null,
+                'exported_by' => null,
+                'exported_at' => null,
+                'created_at' => '2026-11-05 12:00:00',
+                'updated_at' => null,
+            ],
+        ]);
+
+        $command = SearchTimeEntriesCommand::fromRequest([
+            'users' => [
+                '550e8400-e29b-41d4-a716-446655440000',
+            ],
+        ]);
+
+        self::assertSame(1, $this->repository->getTotalCount($command));
+    }
+
+    public function testSearchReturnsOnlyDeviationEntries() : void {
+        $this->loadSchema('time_entries');
+
+        $this->seed('time_entries', [
+            [
+                'id' => '550e8400-e29b-41d4-a716-446655440001',
+                'user_id' => '550e8400-e29b-41d4-a716-446655440000',
+                'date' => '2026-11-05',
+                'duration' => '03:05:00',
+                'activity_role' => 'Ledare',
+                'group_id' => '660e8400-e29b-41d4-a716-446655440000',
+                'comment' => 'Normal post',
+                'is_substitute' => 0,
+                'approved_by' => null,
+                'approved_at' => null,
+                'exported_by' => null,
+                'exported_at' => null,
+                'created_at' => '2026-11-05 12:00:00',
+                'updated_at' => null,
+            ],
+            [
+                'id' => '550e8400-e29b-41d4-a716-446655440002',
+                'user_id' => '550e8400-e29b-41d4-a716-446655440000',
+                'date' => '2026-11-06',
+                'duration' => '02:00:00',
+                'activity_role' => 'Ledare',
+                'group_id' => '660e8400-e29b-41d4-a716-446655440001',
+                'comment' => 'Vikariepost',
+                'is_substitute' => 1,
+                'approved_by' => null,
+                'approved_at' => null,
+                'exported_by' => null,
+                'exported_at' => null,
+                'created_at' => '2026-11-06 12:00:00',
+                'updated_at' => null,
+            ],
+        ]);
+
+        $command = SearchTimeEntriesCommand::fromRequest(['deviationsOnly' => true, ]);
+
+        $result = $this->repository->search($command);
+
+        self::assertCount(1, $result);
+
+        self::assertSame('550e8400-e29b-41d4-a716-446655440002', $result[0]->getId()->toString());
+
+        self::assertSame(1, $result[0]->getIsSubstitute());
     }
 }

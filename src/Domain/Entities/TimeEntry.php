@@ -21,6 +21,7 @@ class TimeEntry implements JsonSerializable {
         private string $activityRole,
         private ?GroupId $groupId,
         private ?string $comment,
+        private int $isSubstitute,
         private ?UserId $approvedBy,
         private ?DateTimeValue $approvedAt,
         private ?UserId $exportedBy,
@@ -28,6 +29,28 @@ class TimeEntry implements JsonSerializable {
         private DateTimeValue $createdAt,
         private ?DateTimeValue $updatedAt,
     ) {
+    }
+
+    /**
+     * @param array<string,mixed> $row
+     */
+    public static function fromDBRow(array $row) : self {
+        return new self(
+            new TimeEntryId($row['id']),
+            new UserId($row['user_id']),
+            new DateValue($row['date']),
+            new TimeValue($row['duration']),
+            $row['activity_role'],
+            !empty($row['group_id']) ? new GroupId($row['group_id']) : null,
+            $row['comment'],
+            $row['is_substitute'],
+            !empty($row['approved_by']) ? new UserId($row['approved_by']) : null,
+            !empty($row['approved_at']) ? new DateTimeValue($row['approved_at']) : null,
+            !empty($row['exported_by']) ? new UserId($row['exported_by']) : null,
+            !empty($row['exported_at']) ? new DateTimeValue($row['exported_at']) : null,
+            new DateTimeValue($row['created_at']),
+            !empty($row['updated_at']) ? new DateTimeValue($row['updated_at']) : null,
+        );
     }
 
     public function getId() : TimeEntryId {
@@ -56,6 +79,10 @@ class TimeEntry implements JsonSerializable {
 
     public function getComment() : ?string {
         return $this->comment;
+    }
+
+    public function getIsSubstitute() : int {
+        return $this->isSubstitute;
     }
 
     public function getApprovedBy() : ?UserId {
@@ -102,6 +129,10 @@ class TimeEntry implements JsonSerializable {
         $this->comment = $comment;
     }
 
+    public function setIsSubstitute(int $isSubstitute) : void {
+        $this->isSubstitute = $isSubstitute;
+    }
+
     public function setUpdatedAt(?DateTimeValue $updatedAt) : void {
         $this->updatedAt = $updatedAt;
     }
@@ -119,27 +150,6 @@ class TimeEntry implements JsonSerializable {
     }
 
     /**
-     * @param array<string,mixed> $row
-     */
-    public static function fromDBRow(array $row) : self {
-        return new self(
-            new TimeEntryId($row['id']),
-            new UserId($row['user_id']),
-            new DateValue($row['date']),
-            new TimeValue($row['duration']),
-            $row['activity_role'],
-            !empty($row['group_id']) ? new GroupId($row['group_id']) : null,
-            $row['comment'],
-            !empty($row['approved_by']) ? new UserId($row['approved_by']) : null,
-            !empty($row['approved_at']) ? new DateTimeValue($row['approved_at']) : null,
-            !empty($row['exported_by']) ? new UserId($row['exported_by']) : null,
-            !empty($row['exported_at']) ? new DateTimeValue($row['exported_at']) : null,
-            new DateTimeValue($row['created_at']),
-            !empty($row['updated_at']) ? new DateTimeValue($row['updated_at']) : null,
-        );
-    }
-
-    /**
      * @return array<string,mixed>
      */
     public function asDBRow() : array {
@@ -151,6 +161,7 @@ class TimeEntry implements JsonSerializable {
             'activity_role' => $this->activityRole,
             'group_id' => $this->groupId?->toString(),
             'comment' => $this->comment,
+            'is_substitute' => $this->isSubstitute,
             'approved_by' => $this->approvedBy?->toString(),
             'approved_at' => $this->approvedAt?->toString(),
             'exported_by' => $this->exportedBy?->toString(),
@@ -172,6 +183,7 @@ class TimeEntry implements JsonSerializable {
             'activityRole' => $this->activityRole,
             'groupId' => $this->groupId?->toString(),
             'comment' => $this->comment,
+            'isSubstitute' => $this->isSubstitute,
             'approvedBy' => $this->approvedBy?->toString(),
             'approvedAt' => $this->approvedAt?->toString(),
             'exportedBy' => $this->exportedBy?->toString(),

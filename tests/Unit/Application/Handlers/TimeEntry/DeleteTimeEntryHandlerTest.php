@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Application\Handlers\TimeEntry;
 
 use App\Application\Handlers\TimeEntry\DeleteTimeEntryHandler;
-use App\Application\Security\CurrentUser;
+use App\Application\Services\CurrentUser;
 use App\Domain\Entities\TimeEntry;
 use App\Domain\Exception\ForbiddenException;
 use App\Domain\Exception\TimeEntryAlreadyApprovedException;
@@ -120,6 +120,7 @@ final class DeleteTimeEntryHandlerTest extends TestCase {
             'Ledare',
             null,
             'Testkommentar',
+            0,
             null,
             null,
             null,
@@ -138,12 +139,13 @@ final class DeleteTimeEntryHandlerTest extends TestCase {
             'Ledare',
             null,
             'Testkommentar',
+            0,
             new UserId('550e8400-e29b-41d4-a716-446655440555', ),
             new DateTimeValue('2026-11-05T13:00:00+00:00', ),
             null,
             null,
             new DateTimeValue('2026-11-05T12:00:00+00:00', ),
-            new DateTimeValue('2026-11-05T13:00:00+00:00',),
+            new DateTimeValue('2026-11-05T13:00:00+00:00', ),
         );
     }
 }

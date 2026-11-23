@@ -11,8 +11,9 @@ use App\Domain\ValueObjects\GroupId;
 use App\Domain\ValueObjects\TimeEntryId;
 use App\Domain\ValueObjects\TimeValue;
 use App\Domain\ValueObjects\UserId;
+use JsonSerializable;
 
-class TimeEntryDTO implements \JsonSerializable {
+class TimeEntryDTO implements JsonSerializable {
     public function __construct(
         private TimeEntryId $id,
         private UserId $userId,
@@ -21,6 +22,7 @@ class TimeEntryDTO implements \JsonSerializable {
         private string $activityRole,
         private ?GroupId $groupId,
         private ?string $comment,
+        private int $isSubstitute,
         private ?UserId $approvedBy,
         private ?DateTimeValue $approvedAt,
         private ?UserId $exportedBy,
@@ -39,6 +41,7 @@ class TimeEntryDTO implements \JsonSerializable {
             $timeEntry->getActivityRole(),
             $timeEntry->getGroupId(),
             $timeEntry->getComment(),
+            $timeEntry->getIsSubstitute(),
             $timeEntry->getApprovedBy(),
             $timeEntry->getApprovedAt(),
             $timeEntry->getExportedBy(),
@@ -57,6 +60,7 @@ class TimeEntryDTO implements \JsonSerializable {
             'activityRole' => $this->activityRole,
             'groupId' => $this->groupId?->toString(),
             'comment' => $this->comment,
+            'isSubstitute' => $this->isSubstitute,
             'approvedBy' => $this->approvedBy?->toString(),
             'approvedAt' => $this->approvedAt?->toISOString(),
             'exportedBy' => $this->exportedBy?->toString(),

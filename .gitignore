@@ -1,7 +1,7 @@
 /vendor/
 /.env
 /.phpunit.result.cache
-/.phpunit.cache/code-coverage/
+/.phpunit.cache/*
 /.php-cs-fixer.cache
 /.idea/*
 /coverage/
