@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: Time Service API
-  version: 0.0.3
+  version: 0.0.4
   description: >-
     OpenAPI för hantering av tidsrapportering i simning.ax-miljön
 
@@ -815,24 +815,19 @@ components:
         userId:
           type: string
           format: uuid
-
         date:
           type: string
           format: date
-
         duration:
           type: string
           example: "03:05:00"
-
         activityRole:
           type: string
           example: "Ledare"
-
         groupId:
           type: string
           format: uuid
           nullable: true
-
         comment:
           type: string
           nullable: true
@@ -843,55 +838,49 @@ components:
         id:
           type: string
           format: uuid
-
         userId:
           type: string
           format: uuid
-
         date:
           type: string
           format: date
-
         duration:
           type: string
           example: "03:05:00"
-
         activityRole:
           type: string
-
         groupId:
           type: string
           format: uuid
           nullable: true
-
         comment:
           type: string
           nullable: true
-
+        isSubstitute:
+          type: integer
+          enum:
+            - 0
+            - 1
+          example: 1
         approvedBy:
           type: string
           format: uuid
           nullable: true
-
         approvedAt:
           type: string
           format: date-time
           nullable: true
-
         exportedBy:
           type: string
           format: uuid
           nullable: true
-
         exportedAt:
           type: string
           format: date-time
           nullable: true
-
         createdAt:
           type: string
           format: date-time
-
         updatedAt:
           type: string
           format: date-time
