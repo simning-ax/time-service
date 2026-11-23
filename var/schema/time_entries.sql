@@ -7,6 +7,7 @@ CREATE TABLE `time_entries`
     `activity_role` VARCHAR(100) NULL DEFAULT NULL COLLATE 'utf8mb4_unicode_ci',
     `group_id`      CHAR(36) NULL DEFAULT NULL COLLATE 'utf8mb4_unicode_ci',
     `comment`       TEXT NULL DEFAULT NULL COLLATE 'utf8mb4_unicode_ci',
+    `is_substitute` TINYINT(1) NULL DEFAULT '0',
     `approved_by`   CHAR(36) NULL DEFAULT NULL COLLATE 'utf8mb4_unicode_ci',
     `approved_at`   DATETIME NULL DEFAULT NULL,
     `exported_by`   CHAR(36) NULL DEFAULT NULL COLLATE 'utf8mb4_unicode_ci',

@@ -225,6 +225,7 @@ final class DbalTimeEntryRepositoryTest extends DatabaseBaseTestCase {
             'Ledare',
             null,
             'Testkommentar',
+            0,
             null,
             null,
             null,
