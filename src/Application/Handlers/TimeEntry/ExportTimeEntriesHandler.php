@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Application\Handlers\TimeEntry;
 
 use App\Application\Commands\TimeEntry\ExportTimeEntriesCommand;
-use App\Application\Security\CurrentUser;
+use App\Application\Services\CurrentUser;
 use App\Domain\DataTransportObjects\TimeEntriesExportRow;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\ValueObjects\DateTimeValue;

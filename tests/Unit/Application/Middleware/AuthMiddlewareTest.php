@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Application\Middleware;
 
 use App\Application\Middleware\AuthMiddleware;
-use App\Application\Security\CurrentUser;
+use App\Application\Services\CurrentUser;
 use App\Domain\Exception\UnauthorizedException;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Server\RequestHandlerInterface;

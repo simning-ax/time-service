@@ -6,7 +6,7 @@ namespace Tests\Unit\Application\Handlers\TimeEntry;
 
 use App\Application\Commands\TimeEntry\ExportTimeEntriesCommand;
 use App\Application\Handlers\TimeEntry\ExportTimeEntriesHandler;
-use App\Application\Security\CurrentUser;
+use App\Application\Services\CurrentUser;
 use App\Domain\DataTransportObjects\TimeEntriesExportRow;
 use App\Domain\Entities\TimeEntry;
 use App\Domain\Repositories\TimeEntryRepository;
@@ -113,6 +113,7 @@ final class ExportTimeEntriesHandlerTest extends TestCase {
             'Ledare',
             new GroupId('660e8400-e29b-41d4-a716-446655440000', ),
             'Kommentar',
+            0,
             new UserId('550e8400-e29b-41d4-a716-446655440998', ),
             new DateTimeValue('2026-11-05T13:00:00+00:00', ),
             null,

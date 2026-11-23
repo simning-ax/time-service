@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Http\Actions\TimeEntry;
 
 use App\Application\Handlers\TimeEntry\SearchTimeEntriesHandler;
-use App\Application\Security\CurrentUser;
+use App\Application\Services\CurrentUser;
 use App\Domain\DataTransportObjects\SearchTimeEntriesDTO;
 use App\Domain\Enums\Permission;
 use App\Domain\Exception\ForbiddenException;

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Http\Actions\TimeEntry;
 
 use App\Application\Handlers\TimeEntry\ExportTimeEntriesHandler;
-use App\Application\Security\CurrentUser;
+use App\Application\Services\CurrentUser;
 use App\Domain\Enums\Permission;
 use App\Domain\Exception\ForbiddenException;
 use App\Domain\Exception\ValidationException;

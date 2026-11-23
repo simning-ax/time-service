@@ -5,16 +5,25 @@ declare(strict_types=1);
 namespace App\Application\Handlers\TimeEntry;
 
 use App\Application\Commands\TimeEntry\TimeEntryCommand;
-use App\Application\Security\CurrentUser;
+use App\Application\Services\CurrentUser;
+use App\Application\Services\TimeEntryClassificationService;
 use App\Domain\DataTransportObjects\TimeEntryDTO;
 use App\Domain\Enums\Permission;
 use App\Domain\Exception\ForbiddenException;
 use App\Domain\Exception\FutureDateNotAllowedException;
 use App\Domain\Exception\NotFoundException;
 use App\Domain\Exception\TimeEntryAlreadyApprovedException;
+use App\Domain\Repositories\TimeEntryRepository;
 use App\Domain\ValueObjects\DateTimeValue;
 
 class UpdateTimeEntryHandler extends TimeEntryHandler {
+    public function __construct(
+        TimeEntryRepository $repository,
+        private TimeEntryClassificationService $classificationService,
+    ) {
+        parent::__construct($repository);
+    }
+
     /**
      * @throws NotFoundException
      */
@@ -49,6 +58,11 @@ class UpdateTimeEntryHandler extends TimeEntryHandler {
         $timeEntry->setGroupId($command->groupId);
         $timeEntry->setComment($command->comment);
         $timeEntry->setUpdatedAt(new DateTimeValue('now'));
+        $timeEntry->setIsSubstitute($this->classificationService->isSubstitute(
+            $command->userId,
+            $command->groupId,
+            $command->activityRole,
+        ));
 
         $this->repository->update($timeEntry);
 

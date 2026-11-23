@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Middleware;
 
-use App\Application\Security\CurrentUser;
+use App\Application\Services\CurrentUser;
 use App\Domain\Exception\UnauthorizedException;
 use App\Domain\ValueObjects\UserId;
 use Psr\Http\Message\ResponseInterface as Response;

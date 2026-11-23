@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Security;
+namespace App\Application\Services;
 
 use App\Domain\Enums\Permission;
 use App\Domain\ValueObjects\UserId;

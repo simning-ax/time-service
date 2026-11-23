@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Http\Actions\TimeEntry;
 
 use App\Application\Handlers\TimeEntry\ApproveTimeEntryHandler;
-use App\Application\Security\CurrentUser;
+use App\Application\Services\CurrentUser;
 use App\Domain\DataTransportObjects\TimeEntryDTO;
 use App\Domain\Entities\TimeEntry;
 use App\Domain\Exception\ForbiddenException;
@@ -34,6 +34,7 @@ final class ApproveTimeEntryActionTest extends TestCase {
             'Ledare',
             new GroupId('660e8400-e29b-41d4-a716-446655440000'),
             'Testkommentar',
+            0,
             new UserId('550e8400-e29b-41d4-a716-446655440999'),
             new DateTimeValue('2026-11-05T13:00:00+00:00'),
             null,

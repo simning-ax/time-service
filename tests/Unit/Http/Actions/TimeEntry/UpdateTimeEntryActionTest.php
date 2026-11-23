@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Http\Actions\TimeEntry;
 
 use App\Application\Handlers\TimeEntry\UpdateTimeEntryHandler;
-use App\Application\Security\CurrentUser;
+use App\Application\Services\CurrentUser;
 use App\Domain\DataTransportObjects\TimeEntryDTO;
 use App\Domain\Entities\TimeEntry;
 use App\Domain\Exception\ValidationException;
@@ -34,6 +34,7 @@ final class UpdateTimeEntryActionTest extends TestCase {
             'Assistent',
             new GroupId('660e8400-e29b-41d4-a716-446655440000'),
             'Uppdaterad kommentar',
+            0,
             null,
             null,
             null,
