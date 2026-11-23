@@ -20,6 +20,7 @@ class SearchTimeEntriesCommand {
         public ?DateValue $to,
         public ?TimeEntryStatus $status,
         public ?string $activityRole,
+        public ?bool $deviationsOnly,
         public string $sortBy,
         public string $sortDirection,
     ) {
@@ -54,6 +55,9 @@ class SearchTimeEntriesCommand {
                 ? TimeEntryStatus::from($data['status'])
                 : null,
             activityRole:$data['activityRole'] ?? null,
+            deviationsOnly:isset($data['deviationsOnly'])
+                ? (bool)$data['deviationsOnly']
+                : null,
             sortBy:$data['sortBy'] ?? 'date',
             sortDirection:$data['sortDirection'] ?? 'asc',
         );

@@ -679,6 +679,9 @@ paths:
                     - exported
                 activityRole:
                   type: string
+                deviationsOnly:
+                  type: boolean
+                  example: true
                 firstRecord:
                   type: integer
                   minimum: 0

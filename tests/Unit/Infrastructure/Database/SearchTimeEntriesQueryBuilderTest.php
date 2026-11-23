@@ -23,6 +23,7 @@ final class SearchTimeEntriesQueryBuilderTest extends TestCase {
                     null,
                     null,
                     null,
+                    null,
                     'date',
                     'asc',
                 ),
@@ -47,6 +48,7 @@ final class SearchTimeEntriesQueryBuilderTest extends TestCase {
                             '550e8400-e29b-41d4-a716-446655440001',
                         ),
                     ],
+                    null,
                     null,
                     null,
                     null,
@@ -78,6 +80,7 @@ final class SearchTimeEntriesQueryBuilderTest extends TestCase {
                     new DateValue('2026-11-30'),
                     null,
                     null,
+                    null,
                     'date',
                     'asc',
                 ),
@@ -105,6 +108,7 @@ final class SearchTimeEntriesQueryBuilderTest extends TestCase {
                     null,
                     TimeEntryStatus::OPEN,
                     null,
+                    null,
                     'date',
                     'asc',
                 ),
@@ -123,6 +127,7 @@ final class SearchTimeEntriesQueryBuilderTest extends TestCase {
                     null,
                     null,
                     TimeEntryStatus::APPROVED,
+                    null,
                     null,
                     'date',
                     'asc',
@@ -145,6 +150,7 @@ final class SearchTimeEntriesQueryBuilderTest extends TestCase {
                     null,
                     TimeEntryStatus::EXPORTED,
                     null,
+                    null,
                     'date',
                     'asc',
                 ),
@@ -164,6 +170,7 @@ final class SearchTimeEntriesQueryBuilderTest extends TestCase {
                     null,
                     null,
                     'Ledare',
+                    null,
                     'date',
                     'asc',
                 ),
@@ -180,6 +187,7 @@ final class SearchTimeEntriesQueryBuilderTest extends TestCase {
         $command = new SearchTimeEntriesCommand(
             0,
             50,
+            null,
             null,
             null,
             null,
@@ -203,6 +211,7 @@ final class SearchTimeEntriesQueryBuilderTest extends TestCase {
             null,
             null,
             null,
+            null,
             'date',
             'asc',
         );
@@ -216,6 +225,7 @@ final class SearchTimeEntriesQueryBuilderTest extends TestCase {
         $command = new SearchTimeEntriesCommand(
             0,
             50,
+            null,
             null,
             null,
             null,
@@ -239,6 +249,7 @@ final class SearchTimeEntriesQueryBuilderTest extends TestCase {
             null,
             null,
             null,
+            null,
             'status',
             'desc',
         );
@@ -252,5 +263,19 @@ final class SearchTimeEntriesQueryBuilderTest extends TestCase {
         self::assertStringContainsString('exported_by IS NULL', $orderBy);
 
         self::assertStringEndsWith('DESC', $orderBy);
+    }
+
+    public function testBuildWithDeviationsOnly() : void {
+        $query = (new SearchTimeEntriesQueryBuilder())
+            ->build(SearchTimeEntriesCommand::fromRequest(['deviationsOnly' => true, ]));
+
+        self::assertSame(' WHERE is_substitute = 1', $query->whereClause());
+    }
+
+    public function testBuildWithoutDeviationFilterWhenFalse() : void {
+        $query = (new SearchTimeEntriesQueryBuilder())
+            ->build(SearchTimeEntriesCommand::fromRequest(['deviationsOnly' => false, ]));
+
+        self::assertSame('', $query->whereClause());
     }
 }

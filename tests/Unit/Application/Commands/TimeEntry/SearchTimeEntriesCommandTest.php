@@ -75,4 +75,16 @@ final class SearchTimeEntriesCommandTest extends TestCase {
 
         self::assertSame('desc', $command->sortDirection);
     }
+
+    public function testCreatesCommandWithDeviationFilter() : void {
+        $command = SearchTimeEntriesCommand::fromRequest(['deviationsOnly' => true, ]);
+
+        self::assertTrue($command->deviationsOnly);
+    }
+
+    public function testCreatesCommandWithoutDeviationFilter() : void {
+        $command = SearchTimeEntriesCommand::fromRequest([]);
+
+        self::assertNull($command->deviationsOnly);
+    }
 }

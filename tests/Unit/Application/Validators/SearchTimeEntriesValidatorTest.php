@@ -104,4 +104,25 @@ final class SearchTimeEntriesValidatorTest extends TestCase {
 
         self::assertSame([], $errors);
     }
+
+    public function testValidationPassesWhenDeviationsOnlyIsBoolean() : void {
+        self::assertSame(
+            [],
+            SearchTimeEntriesValidator::validate([
+                'deviationsOnly' => true,
+            ]),
+        );
+    }
+
+    public function testValidationFailsWhenDeviationsOnlyIsNotBoolean() : void {
+        self::assertSame(
+            [
+                'deviationsOnly' =>
+                    'DeviationsOnly måste vara true eller false',
+            ],
+            SearchTimeEntriesValidator::validate([
+                'deviationsOnly' => 'yes',
+            ]),
+        );
+    }
 }

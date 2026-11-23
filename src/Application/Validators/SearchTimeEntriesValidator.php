@@ -21,6 +21,7 @@ class SearchTimeEntriesValidator {
         self::validateToDate($data, $errors);
         self::validateStatus($data, $errors);
         self::validateActivityRole($data, $errors);
+        self::validateDeviationsOnly($data, $errors);
         self::validateFirstRecord($data, $errors);
         self::validateMaxRecords($data, $errors);
         self::validateSortBy($data, $errors);
@@ -110,6 +111,21 @@ class SearchTimeEntriesValidator {
 
         if (trim((string)$data['activityRole']) === '') {
             $errors['activityRole'] = 'Aktivitetsroll får inte vara tom';
+        }
+    }
+
+    /**
+     * @param array<string,mixed> $data
+     * @param array<string,string> $errors
+     */
+    private static function validateDeviationsOnly(array $data, array &$errors) : void {
+
+        if (!isset($data['deviationsOnly'])) {
+            return;
+        }
+
+        if (!is_bool($data['deviationsOnly'])) {
+            $errors['deviationsOnly'] = 'DeviationsOnly måste vara true eller false';
         }
     }
 

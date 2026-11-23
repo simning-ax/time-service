@@ -23,6 +23,7 @@ class SearchTimeEntriesQueryBuilder {
         $this->addDateFilter($command);
         $this->addStatusFilter($command);
         $this->addActivityRoleFilter($command);
+        $this->addDeviationsFilter($command);
 
         return $this;
     }
@@ -84,6 +85,16 @@ class SearchTimeEntriesQueryBuilder {
         $this->where[] = 'activity_role = ?';
 
         $this->parameters[] = $command->activityRole;
+    }
+
+    private function addDeviationsFilter(SearchTimeEntriesCommand $command) : void {
+
+        if ($command->deviationsOnly !== true) {
+            return;
+        }
+
+        $this->where[] =
+            'is_substitute = 1';
     }
 
     public function whereClause() : string {
