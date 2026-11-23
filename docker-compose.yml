@@ -13,10 +13,10 @@ services:
 
   auth-service:
     container_name: auth-service
-    image: ghcr.io/3584573427749/auth-service:latest
+    image: ghcr.io/simning-ax/auth-service:latest
     restart: unless-stopped
 
   group-service:
     container_name: group-service
-    image: ghcr.io/3584573427749/group-service:latest
+    image: ghcr.io/simning-ax/group-service:latest
     restart: unless-stopped
