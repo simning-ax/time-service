@@ -24,25 +24,27 @@ RUN composer dump-autoload \
 #
 # Runtime stage
 #
-FROM php:8.6.0-fpm-alpine
+FROM php:8.5.13-fpm-alpine
 
 RUN apk add --no-cache \
-    bash \
+    nginx \
     curl \
+    bash \
     mariadb-client \
     oniguruma-dev \
-    && docker-php-ext-install pdo pdo_mysql
+    && docker-php-ext-install \
+        pdo \
+        pdo_mysql
 
 WORKDIR /var/www
 
 COPY --from=builder /app /var/www
 
+COPY docker/nginx/default.conf /etc/nginx/http.d/default.conf
 COPY docker/*.sh /
 
 RUN chmod +x /*.sh
 
-ENTRYPOINT ["/entrypoint.sh"]
-
 EXPOSE 8080
 
-CMD ["php-fpm"]
+CMD ["/start.sh"]
